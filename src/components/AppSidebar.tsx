@@ -69,21 +69,21 @@ export function AppSidebar() {
   const location = useLocation();
 
   return (
-    <Sidebar className="border-r border-farm-beige-dark">
-      <SidebarHeader className="p-6 border-b border-farm-beige-dark">
+    <Sidebar className="border-r border-farm-cream/50">
+      <SidebarHeader className="p-6 border-b border-farm-cream/50 bg-farm-cream">
         <div className="flex items-center space-x-3">
           <div className="bg-farm-green rounded-lg w-10 h-10 flex items-center justify-center">
             <span className="text-xl text-white">🚜</span>
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">FarmShop</h2>
-            <p className="text-sm text-gray-500">Gestion d'élevage</p>
+            <h2 className="text-xl font-bold text-farm-green-dark">FarmShop</h2>
+            <p className="text-sm text-gray-600">Gestion d'élevage</p>
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="bg-farm-cream/30">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-farm-green font-semibold">Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-farm-green-dark font-semibold">Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => {
@@ -92,8 +92,8 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton 
                       asChild 
-                      className={`transition-all duration-200 hover:bg-farm-green/10 ${
-                        isActive ? 'bg-farm-green text-white hover:bg-farm-green' : ''
+                      className={`transition-all duration-200 hover:bg-farm-yellow/20 ${
+                        isActive ? 'bg-farm-green text-white hover:bg-farm-green-dark' : 'text-farm-green-dark'
                       }`}
                     >
                       <Link to={item.url} className="flex items-center space-x-3 p-3 rounded-lg">

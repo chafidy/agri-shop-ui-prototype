@@ -79,10 +79,10 @@ const Products = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-farm-beige/50 min-h-screen">
+    <div className="p-6 space-y-6 bg-farm-cream/30 min-h-screen">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gestion des Produits</h1>
+          <h1 className="text-3xl font-bold text-farm-green-dark">Gestion des Produits</h1>
           <p className="text-gray-600 mt-1">Gérez votre catalogue de produits</p>
         </div>
         <Button className="bg-farm-green hover:bg-farm-green-dark hover-scale">
@@ -124,7 +124,7 @@ const Products = () => {
       {/* Products Table */}
       <Card className="shadow-sm border-0 bg-white">
         <CardHeader>
-          <CardTitle className="flex items-center">
+          <CardTitle className="flex items-center text-farm-green-dark">
             <Package className="w-5 h-5 mr-2 text-farm-green" />
             Liste des Produits ({filteredProducts.length})
           </CardTitle>
@@ -134,24 +134,24 @@ const Products = () => {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900">Nom du produit</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900">Catégorie</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900">Stock</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900">Prix d'achat</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900">Prix de vente</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900">Fournisseur</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900">Statut</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900">Actions</th>
+                  <th className="text-left py-3 px-4 font-semibold text-farm-green-dark">Nom du produit</th>
+                  <th className="text-left py-3 px-4 font-semibold text-farm-green-dark">Catégorie</th>
+                  <th className="text-left py-3 px-4 font-semibold text-farm-green-dark">Stock</th>
+                  <th className="text-left py-3 px-4 font-semibold text-farm-green-dark">Prix d'achat</th>
+                  <th className="text-left py-3 px-4 font-semibold text-farm-green-dark">Prix de vente</th>
+                  <th className="text-left py-3 px-4 font-semibold text-farm-green-dark">Fournisseur</th>
+                  <th className="text-left py-3 px-4 font-semibold text-farm-green-dark">Statut</th>
+                  <th className="text-left py-3 px-4 font-semibold text-farm-green-dark">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.map((product) => (
-                  <tr key={product.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <tr key={product.id} className="border-b border-gray-100 hover:bg-farm-cream/20 transition-colors">
                     <td className="py-4 px-4">
                       <div className="font-medium text-gray-900">{product.name}</div>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-sm">
+                      <span className="px-2 py-1 bg-farm-yellow/20 text-farm-green-dark rounded-md text-sm">
                         {product.category}
                       </span>
                     </td>
@@ -159,10 +159,10 @@ const Products = () => {
                       <span className="font-medium">{product.stock}</span>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="text-gray-900">{product.prixAchat.toLocaleString()} FCFA</span>
+                      <span className="text-gray-900">{product.prixAchat.toLocaleString()} Ar</span>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="font-medium text-green-600">{product.prixVente.toLocaleString()} FCFA</span>
+                      <span className="font-medium text-farm-green">{product.prixVente.toLocaleString()} Ar</span>
                     </td>
                     <td className="py-4 px-4">
                       <span className="text-gray-600">{product.fournisseur}</span>
@@ -172,7 +172,7 @@ const Products = () => {
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" className="hover-scale">
+                        <Button variant="outline" size="sm" className="hover-scale text-farm-green border-farm-green hover:bg-farm-green hover:text-white">
                           Modifier
                         </Button>
                         <Button variant="outline" size="sm" className="text-red-600 hover:bg-red-50 hover-scale">

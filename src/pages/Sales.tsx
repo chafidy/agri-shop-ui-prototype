@@ -68,7 +68,7 @@ const Sales = () => {
 
     toast({
       title: "Vente enregistrée",
-      description: `Vente de ${totalGeneral.toLocaleString()} FCFA enregistrée avec succès`,
+      description: `Vente de ${totalGeneral.toLocaleString()} Ar enregistrée avec succès`,
     });
 
     // Reset form
@@ -78,10 +78,10 @@ const Sales = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-farm-beige/50 min-h-screen">
+    <div className="p-6 space-y-6 bg-farm-cream/30 min-h-screen">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Nouvelle Vente</h1>
+          <h1 className="text-3xl font-bold text-farm-green-dark">Nouvelle Vente</h1>
           <p className="text-gray-600 mt-1">Enregistrer une vente rapide</p>
         </div>
       </div>
@@ -91,7 +91,7 @@ const Sales = () => {
         <div className="lg:col-span-2 space-y-6">
           <Card className="shadow-sm border-0 bg-white">
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-farm-green-dark">
                 <ShoppingCart className="w-5 h-5 mr-2 text-farm-green" />
                 Détails de la vente
               </CardTitle>
@@ -127,7 +127,7 @@ const Sales = () => {
 
           <Card className="shadow-sm border-0 bg-white">
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+              <CardTitle className="flex items-center justify-between text-farm-green-dark">
                 <span>Produits</span>
                 <Button 
                   onClick={addSaleItem} 
@@ -142,7 +142,7 @@ const Sales = () => {
             <CardContent>
               <div className="space-y-4">
                 {saleItems.map((item, index) => (
-                  <div key={item.id} className="p-4 border border-gray-200 rounded-lg space-y-3">
+                  <div key={item.id} className="p-4 border border-farm-cream rounded-lg space-y-3 bg-farm-cream/10">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       <div className="md:col-span-2">
                         <Label>Produit</Label>
@@ -181,8 +181,8 @@ const Sales = () => {
                       </div>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold">
-                        Total: {item.total.toLocaleString()} FCFA
+                      <span className="font-semibold text-farm-green">
+                        Total: {item.total.toLocaleString()} Ar
                       </span>
                       {saleItems.length > 1 && (
                         <Button 
@@ -206,7 +206,7 @@ const Sales = () => {
         <div className="space-y-6">
           <Card className="shadow-sm border-0 bg-white">
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-farm-green-dark">
                 <CreditCard className="w-5 h-5 mr-2 text-farm-green" />
                 Récapitulatif
               </CardTitle>
@@ -215,16 +215,16 @@ const Sales = () => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Sous-total:</span>
-                  <span>{totalGeneral.toLocaleString()} FCFA</span>
+                  <span>{totalGeneral.toLocaleString()} Ar</span>
                 </div>
                 <div className="flex justify-between">
                   <span>TVA (0%):</span>
-                  <span>0 FCFA</span>
+                  <span>0 Ar</span>
                 </div>
                 <hr />
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total:</span>
-                  <span className="text-farm-green">{totalGeneral.toLocaleString()} FCFA</span>
+                  <span className="text-farm-green">{totalGeneral.toLocaleString()} Ar</span>
                 </div>
               </div>
 
@@ -236,7 +236,7 @@ const Sales = () => {
                 >
                   Enregistrer la vente
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white">
                   Générer le reçu
                 </Button>
               </div>
@@ -245,7 +245,7 @@ const Sales = () => {
 
           <Card className="shadow-sm border-0 bg-white">
             <CardHeader>
-              <CardTitle>Ventes récentes</CardTitle>
+              <CardTitle className="text-farm-green-dark">Ventes récentes</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -254,14 +254,14 @@ const Sales = () => {
                   { client: "Élevage Diallo", total: 23000, temps: "Il y a 1h" },
                   { client: "Coopérative Nord", total: 67000, temps: "Il y a 2h" }
                 ].map((vente, index) => (
-                  <div key={index} className="p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="p-3 bg-farm-cream/30 rounded-lg">
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="font-medium text-sm">{vente.client}</p>
                         <p className="text-xs text-gray-500">{vente.temps}</p>
                       </div>
                       <span className="font-semibold text-farm-green">
-                        {vente.total.toLocaleString()} FCFA
+                        {vente.total.toLocaleString()} Ar
                       </span>
                     </div>
                   </div>
