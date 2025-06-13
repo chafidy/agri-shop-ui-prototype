@@ -7,7 +7,8 @@ import {
   Settings,
   FileText,
   Archive,
-  UserPlus
+  UserPlus,
+  ShoppingBag
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -32,6 +33,11 @@ const menuItems = [
     title: "Ventes",
     url: "/sales",
     icon: ShoppingCart,
+  },
+  {
+    title: "Achats",
+    url: "/purchases",
+    icon: ShoppingBag,
   },
   {
     title: "Produits",

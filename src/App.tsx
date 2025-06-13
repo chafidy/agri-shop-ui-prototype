@@ -10,6 +10,12 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products";
 import Sales from "./pages/Sales";
+import Purchases from "./pages/Purchases";
+import Inventory from "./pages/Inventory";
+import Suppliers from "./pages/Suppliers";
+import Reports from "./pages/Reports";
+import UsersPage from "./pages/Users";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,44 +58,34 @@ const App = () => (
               <Sales />
             </AppLayout>
           } />
+          <Route path="/purchases" element={
+            <AppLayout>
+              <Purchases />
+            </AppLayout>
+          } />
           <Route path="/inventory" element={
             <AppLayout>
-              <div className="p-6">
-                <h1 className="text-3xl font-bold">Gestion des Stocks</h1>
-                <p className="text-gray-600 mt-2">Page en cours de développement...</p>
-              </div>
+              <Inventory />
             </AppLayout>
           } />
           <Route path="/suppliers" element={
             <AppLayout>
-              <div className="p-6">
-                <h1 className="text-3xl font-bold">Fournisseurs</h1>
-                <p className="text-gray-600 mt-2">Page en cours de développement...</p>
-              </div>
+              <Suppliers />
             </AppLayout>
           } />
           <Route path="/reports" element={
             <AppLayout>
-              <div className="p-6">
-                <h1 className="text-3xl font-bold">Rapports</h1>
-                <p className="text-gray-600 mt-2">Page en cours de développement...</p>
-              </div>
+              <Reports />
             </AppLayout>
           } />
           <Route path="/users" element={
             <AppLayout>
-              <div className="p-6">
-                <h1 className="text-3xl font-bold">Gestion des Utilisateurs</h1>
-                <p className="text-gray-600 mt-2">Page en cours de développement...</p>
-              </div>
+              <UsersPage />
             </AppLayout>
           } />
           <Route path="/settings" element={
             <AppLayout>
-              <div className="p-6">
-                <h1 className="text-3xl font-bold">Paramètres</h1>
-                <p className="text-gray-600 mt-2">Page en cours de développement...</p>
-              </div>
+              <Settings />
             </AppLayout>
           } />
           <Route path="*" element={<NotFound />} />
