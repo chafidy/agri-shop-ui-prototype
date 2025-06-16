@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Settings as SettingsIcon, Save, Database, Bell, Shield, Palette, Globe, CreditCard } from 'lucide-react';
+import { Settings as SettingsIcon, Save, Database, Bell, Shield, Palette, Globe, CreditCard, Package, Calculator, FileText, Hash } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Settings = () => {
@@ -19,6 +19,10 @@ const Settings = () => {
   const [especes, setEspeces] = useState(true);
   const [mobileMoney, setMobileMoney] = useState(true);
   const [cheque, setCheque] = useState(false);
+
+  // États pour les nouvelles configurations
+  const [tvaApplicable, setTvaApplicable] = useState(true);
+  const [seuilStockGlobal, setSeuilStockGlobal] = useState(10);
 
   const handleSaveGeneral = () => {
     toast({
@@ -38,6 +42,27 @@ const Settings = () => {
     toast({
       title: "Modes de paiement mis à jour",
       description: "Les modes de paiement ont été configurés",
+    });
+  };
+
+  const handleSaveStock = () => {
+    toast({
+      title: "Configuration stock sauvegardée",
+      description: "Les paramètres de gestion de stock ont été mis à jour",
+    });
+  };
+
+  const handleSaveNumerotation = () => {
+    toast({
+      title: "Numérotation sauvegardée",
+      description: "Les formats de numérotation ont été configurés",
+    });
+  };
+
+  const handleSaveTva = () => {
+    toast({
+      title: "TVA configurée",
+      description: "Les paramètres de TVA ont été sauvegardés",
     });
   };
 
@@ -118,6 +143,185 @@ const Settings = () => {
             <Button onClick={handleSaveGeneral} className="w-full bg-farm-green hover:bg-farm-green-dark">
               <Save className="w-4 h-4 mr-2" />
               Sauvegarder
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Configuration Stock */}
+        <Card className="shadow-sm border-0 bg-white">
+          <CardHeader>
+            <CardTitle className="flex items-center text-farm-green-dark">
+              <Package className="w-5 h-5 mr-2 text-farm-green" />
+              Configuration Stock
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="seuil-global">Seuil de stock critique global</Label>
+              <Input 
+                id="seuil-global" 
+                type="number" 
+                value={seuilStockGlobal}
+                onChange={(e) => setSeuilStockGlobal(Number(e.target.value))}
+              />
+              <p className="text-xs text-gray-500">Seuil par défaut pour nouveaux produits</p>
+            </div>
+
+            <div className="space-y-3">
+              <Label>Unités de mesure disponibles</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Input defaultValue="Sac 25kg" placeholder="Ex: Sac 25kg" />
+                <Input defaultValue="Sac 50kg" placeholder="Ex: Sac 50kg" />
+                <Input defaultValue="Litre" placeholder="Ex: Litre" />
+                <Input defaultValue="Pièce" placeholder="Ex: Pièce" />
+                <Input defaultValue="Kg" placeholder="Ex: Kg" />
+                <Input defaultValue="Flacon" placeholder="Ex: Flacon" />
+              </div>
+              <Button variant="outline" className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white">
+                Ajouter une unité
+              </Button>
+            </div>
+
+            <div className="space-y-3 p-4 bg-farm-cream/30 rounded-lg">
+              <h4 className="font-semibold text-farm-green-dark">Seuils par catégorie</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <Label className="text-sm">Aliments pour animaux</Label>
+                  <Input className="w-20" type="number" defaultValue="20" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <Label className="text-sm">Vaccins et médicaments</Label>
+                  <Input className="w-20" type="number" defaultValue="5" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <Label className="text-sm">Équipements</Label>
+                  <Input className="w-20" type="number" defaultValue="3" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <Label className="text-sm">Produits d'entretien</Label>
+                  <Input className="w-20" type="number" defaultValue="10" />
+                </div>
+              </div>
+            </div>
+            
+            <Button onClick={handleSaveStock} className="w-full bg-farm-green hover:bg-farm-green-dark">
+              <Save className="w-4 h-4 mr-2" />
+              Sauvegarder la configuration stock
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Format de numérotation */}
+        <Card className="shadow-sm border-0 bg-white">
+          <CardHeader>
+            <CardTitle className="flex items-center text-farm-green-dark">
+              <Hash className="w-5 h-5 mr-2 text-farm-green" />
+              Format de Numérotation
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <Label htmlFor="format-vente">Format bon de vente</Label>
+                <Input id="format-vente" defaultValue="VTE-{YYYY}-{NNN}" />
+                <p className="text-xs text-gray-500">Exemple : VTE-2024-001</p>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="format-achat">Format bon d'achat</Label>
+                <Input id="format-achat" defaultValue="ACH-{YYYY}-{NNN}" />
+                <p className="text-xs text-gray-500">Exemple : ACH-2024-001</p>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="format-livraison">Format bon de livraison</Label>
+                <Input id="format-livraison" defaultValue="LIV-{YYYY}-{NNN}" />
+                <p className="text-xs text-gray-500">Exemple : LIV-2024-001</p>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="format-devis">Format devis</Label>
+                <Input id="format-devis" defaultValue="DEV-{YYYY}-{NNN}" />
+                <p className="text-xs text-gray-500">Exemple : DEV-2024-001</p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h4 className="font-semibold text-blue-800 mb-2">Variables disponibles</h4>
+              <div className="text-sm text-blue-700 space-y-1">
+                <p><code>{"{YYYY}"}</code> - Année sur 4 chiffres</p>
+                <p><code>{"{YY}"}</code> - Année sur 2 chiffres</p>
+                <p><code>{"{MM}"}</code> - Mois sur 2 chiffres</p>
+                <p><code>{"{NNN}"}</code> - Numéro séquentiel</p>
+              </div>
+            </div>
+            
+            <Button onClick={handleSaveNumerotation} className="w-full bg-farm-green hover:bg-farm-green-dark">
+              <Save className="w-4 h-4 mr-2" />
+              Sauvegarder les formats
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Configuration TVA */}
+        <Card className="shadow-sm border-0 bg-white">
+          <CardHeader>
+            <CardTitle className="flex items-center text-farm-green-dark">
+              <Calculator className="w-5 h-5 mr-2 text-farm-green" />
+              Configuration TVA
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="tva-applicable">TVA applicable</Label>
+                <p className="text-sm text-gray-600">Appliquer la TVA sur les ventes</p>
+              </div>
+              <Switch
+                id="tva-applicable"
+                checked={tvaApplicable}
+                onCheckedChange={setTvaApplicable}
+              />
+            </div>
+
+            {tvaApplicable && (
+              <div className="space-y-4 p-4 bg-farm-cream/30 rounded-lg">
+                <div className="space-y-2">
+                  <Label htmlFor="taux-tva-standard">Taux TVA standard (%)</Label>
+                  <Input id="taux-tva-standard" type="number" defaultValue="20" step="0.01" />
+                  <p className="text-xs text-gray-500">Taux par défaut appliqué aux produits</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="taux-tva-reduit">Taux TVA réduit (%)</Label>
+                  <Input id="taux-tva-reduit" type="number" defaultValue="5.5" step="0.01" />
+                  <p className="text-xs text-gray-500">Pour produits alimentaires de base</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="numero-tva">Numéro de TVA</Label>
+                  <Input id="numero-tva" placeholder="MG-12345678901" />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="regime-tva">Régime TVA</Label>
+                  <Select defaultValue="normal">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal">Régime normal</SelectItem>
+                      <SelectItem value="simplifie">Régime simplifié</SelectItem>
+                      <SelectItem value="franchise">Franchise en base</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
+            
+            <Button onClick={handleSaveTva} className="w-full bg-farm-green hover:bg-farm-green-dark">
+              <Save className="w-4 h-4 mr-2" />
+              Sauvegarder la configuration TVA
             </Button>
           </CardContent>
         </Card>
