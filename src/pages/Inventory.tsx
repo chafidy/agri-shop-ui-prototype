@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,7 @@ import { toast } from '@/hooks/use-toast';
 
 const Inventory = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('');
+  const [filterType, setFilterType] = useState('all');
 
   const inventoryData = [
     {
@@ -85,7 +84,7 @@ const Inventory = () => {
 
   const filteredInventory = inventoryData.filter(item => {
     const matchesSearch = item.produit.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterType === '' || 
+    const matchesFilter = filterType === 'all' || 
       (filterType === 'critique' && item.stockActuel <= item.stockMinimum) ||
       (filterType === 'rupture' && item.stockActuel === 0) ||
       (filterType === 'ok' && item.stockActuel > item.stockMinimum);
@@ -196,7 +195,7 @@ const Inventory = () => {
                     <SelectValue placeholder="Filtrer par état" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Tous</SelectItem>
+                    <SelectItem value="all">Tous</SelectItem>
                     <SelectItem value="ok">Stock OK</SelectItem>
                     <SelectItem value="critique">Stock critique</SelectItem>
                     <SelectItem value="rupture">Rupture</SelectItem>
