@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ShoppingCart, Plus, Package, Truck, CreditCard, FileText, Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { ShoppingCart, Plus, Package, Truck, CreditCard, FileText, Eye, Clock, CheckCircle, XCircle, Edit } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Purchases = () => {
@@ -18,23 +18,10 @@ const Purchases = () => {
   const [isNewOrderOpen, setIsNewOrderOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isViewOrderOpen, setIsViewOrderOpen] = useState(false);
-
-  const fournisseurs = [
-    { id: 1, nom: "Agrobio SARL" },
-    { id: 2, nom: "VetSupply Madagascar" },
-    { id: 3, nom: "EquipFarm Ltd" },
-    { id: 4, nom: "ChemAgri Solutions" }
-  ];
-
-  const products = [
-    { id: 1, name: "Aliment pour vaches", fournisseur: "Agrobio SARL" },
-    { id: 2, name: "Vaccin Newcastle", fournisseur: "VetSupply Madagascar" },
-    { id: 3, name: "Abreuvoir automatique", fournisseur: "EquipFarm Ltd" },
-    { id: 4, name: "Complément porcs", fournisseur: "Agrobio SARL" },
-    { id: 5, name: "Désinfectant étable", fournisseur: "ChemAgri Solutions" }
-  ];
-
-  const commandes = [
+  const [isEditStatusOpen, setIsEditStatusOpen] = useState(false);
+  const [selectedOrderForStatus, setSelectedOrderForStatus] = useState<any>(null);
+  const [newStatus, setNewStatus] = useState('');
+  const [commandes, setCommandes] = useState([
     {
       id: 1,
       numero: "CMD-2024-001",
@@ -80,6 +67,21 @@ const Purchases = () => {
         { nom: "Abreuvoir automatique", quantite: 10, prix: 85000, total: 850000 }
       ]
     }
+  ]);
+
+  const fournisseurs = [
+    { id: 1, nom: "Agrobio SARL" },
+    { id: 2, nom: "VetSupply Madagascar" },
+    { id: 3, nom: "EquipFarm Ltd" },
+    { id: 4, nom: "ChemAgri Solutions" }
+  ];
+
+  const products = [
+    { id: 1, name: "Aliment pour vaches", fournisseur: "Agrobio SARL" },
+    { id: 2, name: "Vaccin Newcastle", fournisseur: "VetSupply Madagascar" },
+    { id: 3, name: "Abreuvoir automatique", fournisseur: "EquipFarm Ltd" },
+    { id: 4, name: "Complément porcs", fournisseur: "Agrobio SARL" },
+    { id: 5, name: "Désinfectant étable", fournisseur: "ChemAgri Solutions" }
   ];
 
   const addPurchaseItem = () => {
@@ -131,6 +133,49 @@ const Purchases = () => {
     setFournisseur('');
     setModePaiement('');
     setIsNewOrderOpen(false);
+  };
+
+  const handleEditStatus = (commande: any) => {
+    setSelectedOrderForStatus(commande);
+    setNewStatus(commande.statut);
+    setIsEditStatusOpen(true);
+  };
+
+  const handleUpdateStatus = () => {
+    if (!selectedOrderForStatus || !newStatus) return;
+
+    setCommandes(prevCommandes => 
+      prevCommandes.map(cmd => 
+        cmd.id === selectedOrderForStatus.id 
+          ? { 
+              ...cmd, 
+              statut: newStatus,
+              dateLivraisonReelle: newStatus === 'livré' && !cmd.dateLivraisonReelle 
+                ? new Date().toISOString().split('T')[0] 
+                : cmd.dateLivraisonReelle
+            }
+          : cmd
+      )
+    );
+
+    toast({
+      title: "Statut mis à jour",
+      description: `La commande ${selectedOrderForStatus.numero} est maintenant "${getStatusText(newStatus)}"`,
+    });
+
+    setIsEditStatusOpen(false);
+    setSelectedOrderForStatus(null);
+    setNewStatus('');
+  };
+
+  const getStatusText = (status: string) => {
+    const statusMap = {
+      "commandé": "Commandé",
+      "en_transit": "En transit", 
+      "livré": "Livré",
+      "annulé": "Annulé"
+    };
+    return statusMap[status as keyof typeof statusMap] || status;
   };
 
   const getStatusBadge = (statut: string) => {
@@ -440,6 +485,15 @@ const Purchases = () => {
                           <Eye className="w-3 h-3 mr-1" />
                           Voir
                         </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => handleEditStatus(commande)}
+                          className="hover-scale text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white"
+                        >
+                          <Edit className="w-3 h-3 mr-1" />
+                          Statut
+                        </Button>
                         {commande.statut === 'en_transit' && (
                           <Button 
                             variant="outline" 
@@ -579,6 +633,62 @@ const Purchases = () => {
                 )}
                 <Button variant="outline" onClick={() => setIsViewOrderOpen(false)}>
                   Fermer
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Nouvelle modale pour modifier le statut */}
+      <Dialog open={isEditStatusOpen} onOpenChange={setIsEditStatusOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="w-5 h-5 text-farm-green" />
+              Modifier le statut
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedOrderForStatus && (
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-gray-600 mb-2">
+                  Commande: <span className="font-medium">{selectedOrderForStatus.numero}</span>
+                </p>
+                <p className="text-sm text-gray-600 mb-4">
+                  Statut actuel: {getStatusBadge(selectedOrderForStatus.statut)}
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="newStatus">Nouveau statut</Label>
+                <Select value={newStatus} onValueChange={setNewStatus}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir un statut" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="commandé">Commandé</SelectItem>
+                    <SelectItem value="en_transit">En transit</SelectItem>
+                    <SelectItem value="livré">Livré</SelectItem>
+                    <SelectItem value="annulé">Annulé</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsEditStatusOpen(false)}
+                >
+                  Annuler
+                </Button>
+                <Button 
+                  onClick={handleUpdateStatus}
+                  disabled={!newStatus || newStatus === selectedOrderForStatus.statut}
+                  className="bg-farm-green hover:bg-farm-green-dark"
+                >
+                  Mettre à jour
                 </Button>
               </div>
             </div>
