@@ -18,7 +18,7 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulation de connexion
+    // Simulation de connexion - accès autorisé avec n'importe quels identifiants
     setTimeout(() => {
       if (email && password) {
         toast({
@@ -29,7 +29,7 @@ const Login = () => {
       } else {
         toast({
           title: "Erreur de connexion",
-          description: "Veuillez vérifier vos identifiants",
+          description: "Veuillez saisir un email et un mot de passe",
           variant: "destructive",
         });
       }
@@ -106,6 +106,9 @@ const Login = () => {
             <div className="mt-6 pt-4 border-t border-gray-200">
               <p className="text-xs text-center text-gray-500">
                 Solution dédiée aux boutiques de produits d'élevage
+              </p>
+              <p className="text-xs text-center text-green-600 mt-2 font-medium">
+                Mode démonstration : Utilisez n'importe quels identifiants pour vous connecter
               </p>
             </div>
           </CardContent>
