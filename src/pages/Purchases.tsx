@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ShoppingCart, Plus, Package, Truck, CreditCard, FileText } from 'lucide-react';
+import { ShoppingCart, Plus, Package, Truck, CreditCard, FileText, Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Purchases = () => {
@@ -17,6 +16,8 @@ const Purchases = () => {
   const [fournisseur, setFournisseur] = useState('');
   const [modePaiement, setModePaiement] = useState('');
   const [isNewOrderOpen, setIsNewOrderOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [isViewOrderOpen, setIsViewOrderOpen] = useState(false);
 
   const fournisseurs = [
     { id: 1, nom: "Agrobio SARL" },
@@ -40,10 +41,13 @@ const Purchases = () => {
       fournisseur: "Agrobio SARL",
       dateCommande: "2024-06-10",
       dateLivraison: "2024-06-15",
+      dateLivraisonReelle: "2024-06-15",
       statut: "livré",
       montantTotal: 750000,
+      montantPaye: 750000,
+      modePaiement: "virement",
       produits: [
-        { nom: "Aliment vaches", quantite: 50, prix: 15000 }
+        { nom: "Aliment vaches", quantite: 50, prix: 15000, total: 750000 }
       ]
     },
     {
@@ -52,10 +56,13 @@ const Purchases = () => {
       fournisseur: "VetSupply Madagascar",
       dateCommande: "2024-06-08",
       dateLivraison: "2024-06-12",
+      dateLivraisonReelle: null,
       statut: "en_transit",
       montantTotal: 125000,
+      montantPaye: 62500,
+      modePaiement: "credit",
       produits: [
-        { nom: "Vaccin Newcastle", quantite: 50, prix: 2500 }
+        { nom: "Vaccin Newcastle", quantite: 50, prix: 2500, total: 125000 }
       ]
     },
     {
@@ -64,10 +71,13 @@ const Purchases = () => {
       fournisseur: "EquipFarm Ltd",
       dateCommande: "2024-06-05",
       dateLivraison: "2024-06-20",
+      dateLivraisonReelle: null,
       statut: "commandé",
       montantTotal: 850000,
+      montantPaye: 0,
+      modePaiement: "cheque",
       produits: [
-        { nom: "Abreuvoir automatique", quantite: 10, prix: 85000 }
+        { nom: "Abreuvoir automatique", quantite: 10, prix: 85000, total: 850000 }
       ]
     }
   ];
@@ -125,14 +135,53 @@ const Purchases = () => {
 
   const getStatusBadge = (statut: string) => {
     const statusConfig = {
-      "commandé": { variant: "secondary" as const, className: "bg-blue-100 text-blue-800", text: "Commandé" },
-      "en_transit": { variant: "secondary" as const, className: "bg-orange-100 text-orange-800", text: "En transit" },
-      "livré": { variant: "default" as const, className: "bg-green-100 text-green-800", text: "Livré" },
-      "annulé": { variant: "destructive" as const, className: "bg-red-100 text-red-800", text: "Annulé" }
+      "commandé": { 
+        variant: "secondary" as const, 
+        className: "bg-blue-100 text-blue-800 border-blue-200", 
+        text: "Commandé",
+        icon: Clock
+      },
+      "en_transit": { 
+        variant: "secondary" as const, 
+        className: "bg-orange-100 text-orange-800 border-orange-200", 
+        text: "En transit",
+        icon: Truck
+      },
+      "livré": { 
+        variant: "default" as const, 
+        className: "bg-green-100 text-green-800 border-green-200", 
+        text: "Livré",
+        icon: CheckCircle
+      },
+      "annulé": { 
+        variant: "destructive" as const, 
+        className: "bg-red-100 text-red-800 border-red-200", 
+        text: "Annulé",
+        icon: XCircle
+      }
     };
     
     const config = statusConfig[statut as keyof typeof statusConfig];
-    return <Badge variant={config.variant} className={config.className}>{config.text}</Badge>;
+    const IconComponent = config.icon;
+    
+    return (
+      <Badge variant={config.variant} className={`${config.className} flex items-center gap-1`}>
+        <IconComponent className="w-3 h-3" />
+        {config.text}
+      </Badge>
+    );
+  };
+
+  const handleViewOrder = (commande: any) => {
+    setSelectedOrder(commande);
+    setIsViewOrderOpen(true);
+  };
+
+  const handleReceiveOrder = (commandeId: number) => {
+    toast({
+      title: "Commande réceptionnée",
+      description: "La commande a été marquée comme livrée",
+    });
   };
 
   const commandesEnCours = commandes.filter(c => c.statut !== 'livré').length;
@@ -358,22 +407,46 @@ const Purchases = () => {
                       <span className="text-gray-600">{commande.dateCommande}</span>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="text-gray-600">{commande.dateLivraison}</span>
+                      <div className="flex flex-col">
+                        <span className="text-gray-600">{commande.dateLivraison}</span>
+                        {commande.dateLivraisonReelle && (
+                          <span className="text-xs text-green-600">
+                            Livré le {commande.dateLivraisonReelle}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="font-medium text-farm-green">{commande.montantTotal.toLocaleString()} Ar</span>
+                      <div className="flex flex-col">
+                        <span className="font-medium text-farm-green">{commande.montantTotal.toLocaleString()} Ar</span>
+                        {commande.montantPaye < commande.montantTotal && (
+                          <span className="text-xs text-orange-600">
+                            Payé: {commande.montantPaye.toLocaleString()} Ar
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-4 px-4">
                       {getStatusBadge(commande.statut)}
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" className="hover-scale text-farm-green border-farm-green hover:bg-farm-green hover:text-white">
-                          <FileText className="w-3 h-3 mr-1" />
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => handleViewOrder(commande)}
+                          className="hover-scale text-farm-green border-farm-green hover:bg-farm-green hover:text-white"
+                        >
+                          <Eye className="w-3 h-3 mr-1" />
                           Voir
                         </Button>
                         {commande.statut === 'en_transit' && (
-                          <Button variant="outline" size="sm" className="hover-scale text-farm-green border-farm-green hover:bg-farm-green hover:text-white">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handleReceiveOrder(commande.id)}
+                            className="hover-scale text-farm-green border-farm-green hover:bg-farm-green hover:text-white"
+                          >
                             <Truck className="w-3 h-3 mr-1" />
                             Réceptionner
                           </Button>
@@ -387,6 +460,131 @@ const Purchases = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Modale de visualisation des détails de commande */}
+      <Dialog open={isViewOrderOpen} onOpenChange={setIsViewOrderOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5 text-farm-green" />
+              Détails de la commande {selectedOrder?.numero}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedOrder && (
+            <div className="space-y-6">
+              {/* Informations générales */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg text-farm-green-dark">Informations générales</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Fournisseur:</span>
+                      <span className="font-medium">{selectedOrder.fournisseur}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Date de commande:</span>
+                      <span className="font-medium">{selectedOrder.dateCommande}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Livraison prévue:</span>
+                      <span className="font-medium">{selectedOrder.dateLivraison}</span>
+                    </div>
+                    {selectedOrder.dateLivraisonReelle && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Livraison réelle:</span>
+                        <span className="font-medium text-green-600">{selectedOrder.dateLivraisonReelle}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Statut:</span>
+                      {getStatusBadge(selectedOrder.statut)}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg text-farm-green-dark">Informations financières</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Montant total:</span>
+                      <span className="font-bold text-farm-green">{selectedOrder.montantTotal.toLocaleString()} Ar</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Montant payé:</span>
+                      <span className="font-medium">{selectedOrder.montantPaye.toLocaleString()} Ar</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Solde restant:</span>
+                      <span className={`font-medium ${selectedOrder.montantPaye < selectedOrder.montantTotal ? 'text-orange-600' : 'text-green-600'}`}>
+                        {(selectedOrder.montantTotal - selectedOrder.montantPaye).toLocaleString()} Ar
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Mode de paiement:</span>
+                      <span className="font-medium capitalize">{selectedOrder.modePaiement}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Produits commandés */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg text-farm-green-dark">Produits commandés</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="text-left py-2 px-3 font-semibold text-gray-700">Produit</th>
+                          <th className="text-left py-2 px-3 font-semibold text-gray-700">Quantité</th>
+                          <th className="text-left py-2 px-3 font-semibold text-gray-700">Prix unitaire</th>
+                          <th className="text-left py-2 px-3 font-semibold text-gray-700">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedOrder.produits.map((produit: any, index: number) => (
+                          <tr key={index} className="border-b border-gray-100">
+                            <td className="py-3 px-3 font-medium">{produit.nom}</td>
+                            <td className="py-3 px-3">{produit.quantite}</td>
+                            <td className="py-3 px-3">{produit.prix.toLocaleString()} Ar</td>
+                            <td className="py-3 px-3 font-medium text-farm-green">{produit.total.toLocaleString()} Ar</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Actions */}
+              <div className="flex justify-end space-x-3 pt-4 border-t">
+                {selectedOrder.statut === 'en_transit' && (
+                  <Button 
+                    onClick={() => {
+                      handleReceiveOrder(selectedOrder.id);
+                      setIsViewOrderOpen(false);
+                    }}
+                    className="bg-farm-green hover:bg-farm-green-dark"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Marquer comme livré
+                  </Button>
+                )}
+                <Button variant="outline" onClick={() => setIsViewOrderOpen(false)}>
+                  Fermer
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
