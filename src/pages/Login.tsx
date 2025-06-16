@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Store } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Login = () => {
@@ -36,12 +37,19 @@ const Login = () => {
     }, 1000);
   };
 
+  const handleForgotPassword = () => {
+    toast({
+      title: "Récupération de mot de passe",
+      description: "Un email de récupération a été envoyé (fonctionnalité simulée)",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-farm-green to-farm-green-dark flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8 animate-fade-in">
           <div className="bg-white rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg">
-            <span className="text-3xl font-bold text-farm-green">🐄</span>
+            <Store className="w-10 h-10 text-farm-green" />
           </div>
           <h1 className="text-4xl font-bold text-white mb-2">FarmShop Pro</h1>
           <p className="text-farm-green-light">Gestion professionnelle de boutique d'élevage</p>
@@ -88,6 +96,7 @@ const Login = () => {
               <div className="text-center">
                 <button 
                   type="button"
+                  onClick={handleForgotPassword}
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Mot de passe oublié ?

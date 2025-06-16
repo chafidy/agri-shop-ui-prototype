@@ -13,7 +13,8 @@ import {
   UserCheck,
   Truck,
   Calculator,
-  BarChart3
+  BarChart3,
+  Store
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -99,7 +100,7 @@ export function AppSidebar() {
       <SidebarHeader className="p-6 border-b border-farm-cream/50 bg-farm-cream">
         <div className="flex items-center space-x-3">
           <div className="bg-farm-green rounded-lg w-10 h-10 flex items-center justify-center">
-            <span className="text-xl text-white">🐄</span>
+            <Store className="w-6 h-6 text-white" />
           </div>
           <div>
             <h2 className="text-xl font-bold text-farm-green-dark">FarmShop Pro</h2>
