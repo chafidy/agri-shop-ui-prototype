@@ -10,7 +10,10 @@ import {
   UserPlus,
   ShoppingBag,
   FolderOpen,
-  UserCheck
+  UserCheck,
+  Truck,
+  Calculator,
+  BarChart3
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -37,47 +40,52 @@ const menuItems = [
     icon: ShoppingCart,
   },
   {
-    title: "Achats",
+    title: "Achats & Approvisionnement",
     url: "/purchases",
     icon: ShoppingBag,
   },
   {
-    title: "Produits",
+    title: "Produits d'élevage",
     url: "/products",
     icon: Package,
   },
   {
-    title: "Catégories",
+    title: "Catégories produits",
     url: "/categories",
     icon: FolderOpen,
   },
   {
-    title: "Stocks",
+    title: "Gestion des stocks",
     url: "/inventory",
     icon: Archive,
   },
   {
-    title: "Clients",
+    title: "Éleveurs & Clients",
     url: "/clients",
     icon: UserCheck,
   },
   {
     title: "Fournisseurs",
     url: "/suppliers",
-    icon: Users,
+    icon: Truck,
   },
   {
-    title: "Rapports",
+    title: "Rapports & Analyses",
     url: "/reports",
-    icon: FileText,
+    icon: BarChart3,
   },
   {
-    title: "Utilisateurs",
+    title: "Comptabilité",
+    url: "/accounting",
+    icon: Calculator,
+  },
+  {
+    title: "Équipe & Personnel",
     url: "/users",
     icon: UserPlus,
   },
   {
-    title: "Paramètres",
+    title: "Configuration",
     url: "/settings",
     icon: Settings,
   },
@@ -91,11 +99,11 @@ export function AppSidebar() {
       <SidebarHeader className="p-6 border-b border-farm-cream/50 bg-farm-cream">
         <div className="flex items-center space-x-3">
           <div className="bg-farm-green rounded-lg w-10 h-10 flex items-center justify-center">
-            <span className="text-xl text-white">🚜</span>
+            <span className="text-xl text-white">🐄</span>
           </div>
           <div>
-            <h2 className="text-xl font-bold text-farm-green-dark">FarmShop</h2>
-            <p className="text-sm text-gray-600">Gestion d'élevage</p>
+            <h2 className="text-xl font-bold text-farm-green-dark">FarmShop Pro</h2>
+            <p className="text-sm text-gray-600">Produits d'élevage</p>
           </div>
         </div>
       </SidebarHeader>

@@ -18,6 +18,7 @@ import Suppliers from "./pages/Suppliers";
 import Reports from "./pages/Reports";
 import UsersPage from "./pages/Users";
 import Settings from "./pages/Settings";
+import Accounting from "./pages/Accounting";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -88,6 +89,11 @@ const App = () => (
           <Route path="/reports" element={
             <AppLayout>
               <Reports />
+            </AppLayout>
+          } />
+          <Route path="/accounting" element={
+            <AppLayout>
+              <Accounting />
             </AppLayout>
           } />
           <Route path="/users" element={
