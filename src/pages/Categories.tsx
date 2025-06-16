@@ -1,10 +1,10 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -14,7 +14,12 @@ import { toast } from '@/hooks/use-toast';
 const Categories = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [formData, setFormData] = useState({
+    nom: '',
+    description: ''
+  });
 
   const [categories, setCategories] = useState([
     {
@@ -56,11 +61,27 @@ const Categories = () => {
     category.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const resetForm = () => {
+    setFormData({
+      nom: '',
+      description: ''
+    });
+  };
+
   const handleAddCategory = () => {
+    if (!formData.nom) {
+      toast({
+        title: "Erreur",
+        description: "Le nom de la catégorie est obligatoire",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const newCategory = {
       id: Date.now(),
-      nom: "Nouvelle catégorie",
-      description: "",
+      nom: formData.nom,
+      description: formData.description,
       nombreProduits: 0,
       dateCreation: new Date().toISOString().split('T')[0],
       actif: true
@@ -71,10 +92,46 @@ const Categories = () => {
       description: "La nouvelle catégorie a été créée avec succès",
     });
     setIsAddDialogOpen(false);
+    resetForm();
   };
 
   const handleEditCategory = (category: any) => {
     setEditingCategory(category);
+    setFormData({
+      nom: category.nom,
+      description: category.description
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateCategory = () => {
+    if (!formData.nom) {
+      toast({
+        title: "Erreur",
+        description: "Le nom de la catégorie est obligatoire",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const updatedCategories = categories.map(category => 
+      category.id === editingCategory.id 
+        ? {
+            ...category,
+            nom: formData.nom,
+            description: formData.description
+          }
+        : category
+    );
+    
+    setCategories(updatedCategories);
+    toast({
+      title: "Catégorie modifiée",
+      description: "La catégorie a été mise à jour avec succès",
+    });
+    setIsEditDialogOpen(false);
+    setEditingCategory(null);
+    resetForm();
   };
 
   const handleDeleteCategory = (id: number) => {
@@ -89,6 +146,10 @@ const Categories = () => {
     setCategories(categories.map(cat => 
       cat.id === id ? { ...cat, actif: !cat.actif } : cat
     ));
+    toast({
+      title: "Statut modifié",
+      description: "Le statut de la catégorie a été changé",
+    });
   };
 
   return (
@@ -111,12 +172,22 @@ const Categories = () => {
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="nom">Nom de la catégorie</Label>
-                <Input id="nom" placeholder="Ex: Aliments pour volailles" />
+                <Label htmlFor="nom">Nom de la catégorie *</Label>
+                <Input 
+                  id="nom" 
+                  placeholder="Ex: Aliments pour volailles" 
+                  value={formData.nom}
+                  onChange={(e) => setFormData({...formData, nom: e.target.value})}
+                />
               </div>
               <div>
                 <Label htmlFor="description">Description</Label>
-                <Textarea id="description" placeholder="Description de la catégorie" />
+                <Textarea 
+                  id="description" 
+                  placeholder="Description de la catégorie" 
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                />
               </div>
               <Button onClick={handleAddCategory} className="w-full bg-farm-green hover:bg-farm-green-dark">
                 Créer la catégorie
@@ -225,7 +296,10 @@ const Categories = () => {
                       onClick={() => toggleCategoryStatus(category.id)}
                       className={category.actif ? "text-green-600" : "text-gray-500"}
                     >
-                      {category.actif ? <Badge className="bg-green-100 text-green-800">Actif</Badge> : <Badge variant="secondary">Inactif</Badge>}
+                      {category.actif ? 
+                        <Badge className="bg-green-100 text-green-800">Actif</Badge> : 
+                        <Badge variant="secondary">Inactif</Badge>
+                      }
                     </Button>
                   </TableCell>
                   <TableCell>
@@ -239,15 +313,35 @@ const Categories = () => {
                         <Edit className="w-3 h-3 mr-1" />
                         Modifier
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteCategory(category.id)}
-                        className="text-red-600 border-red-300 hover:bg-red-50"
-                      >
-                        <Trash2 className="w-3 h-3 mr-1" />
-                        Supprimer
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-red-600 border-red-300 hover:bg-red-50"
+                          >
+                            <Trash2 className="w-3 h-3 mr-1" />
+                            Supprimer
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Êtes-vous sûr de vouloir supprimer la catégorie "{category.nom}" ? Cette action est irréversible.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteCategory(category.id)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Supprimer
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -256,6 +350,38 @@ const Categories = () => {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Edit Category Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Modifier la Catégorie</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-nom">Nom de la catégorie *</Label>
+              <Input 
+                id="edit-nom" 
+                placeholder="Ex: Aliments pour volailles" 
+                value={formData.nom}
+                onChange={(e) => setFormData({...formData, nom: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-description">Description</Label>
+              <Textarea 
+                id="edit-description" 
+                placeholder="Description de la catégorie" 
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+              />
+            </div>
+            <Button onClick={handleUpdateCategory} className="w-full bg-farm-green hover:bg-farm-green-dark">
+              Mettre à jour la catégorie
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
