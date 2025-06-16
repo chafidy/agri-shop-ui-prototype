@@ -9,6 +9,8 @@ import { AppSidebar } from "@/components/AppSidebar";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products";
+import Categories from "./pages/Categories";
+import Clients from "./pages/Clients";
 import Sales from "./pages/Sales";
 import Purchases from "./pages/Purchases";
 import Inventory from "./pages/Inventory";
@@ -51,6 +53,16 @@ const App = () => (
           <Route path="/products" element={
             <AppLayout>
               <Products />
+            </AppLayout>
+          } />
+          <Route path="/categories" element={
+            <AppLayout>
+              <Categories />
+            </AppLayout>
+          } />
+          <Route path="/clients" element={
+            <AppLayout>
+              <Clients />
             </AppLayout>
           } />
           <Route path="/sales" element={

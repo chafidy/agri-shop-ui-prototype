@@ -8,7 +8,9 @@ import {
   FileText,
   Archive,
   UserPlus,
-  ShoppingBag
+  ShoppingBag,
+  FolderOpen,
+  UserCheck
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -45,9 +47,19 @@ const menuItems = [
     icon: Package,
   },
   {
+    title: "Catégories",
+    url: "/categories",
+    icon: FolderOpen,
+  },
+  {
     title: "Stocks",
     url: "/inventory",
     icon: Archive,
+  },
+  {
+    title: "Clients",
+    url: "/clients",
+    icon: UserCheck,
   },
   {
     title: "Fournisseurs",
