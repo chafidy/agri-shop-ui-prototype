@@ -1,4 +1,3 @@
-
 import { 
   Home, 
   ShoppingCart, 
@@ -110,7 +109,6 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className="bg-farm-cream/30">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-farm-green-dark font-semibold">Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => {
