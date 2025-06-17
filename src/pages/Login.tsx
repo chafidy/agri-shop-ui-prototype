@@ -38,10 +38,7 @@ const Login = () => {
   };
 
   const handleForgotPassword = () => {
-    toast({
-      title: "Récupération de mot de passe",
-      description: "Un email de récupération a été envoyé (fonctionnalité simulée)",
-    });
+    navigate('/forgot-password');
   };
 
   return (
