@@ -6,6 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { UserNav } from "@/components/UserNav";
+import { Bell } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
@@ -29,8 +32,15 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
     <div className="min-h-screen flex w-full">
       <AppSidebar />
       <main className="flex-1">
-        <div className="p-4 border-b border-gray-200 bg-white shadow-sm">
+        <div className="p-4 border-b border-gray-200 bg-white shadow-sm flex items-center justify-between">
           <SidebarTrigger className="hover-scale" />
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="h-5 w-5" />
+              <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+            </Button>
+            <UserNav />
+          </div>
         </div>
         {children}
       </main>
