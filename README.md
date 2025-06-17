@@ -5,7 +5,7 @@ Bienvenue dans **FarmShop Manager**, une plateforme intelligente pour la gestion
 ## 📦 Informations du projet
 
 🔗 **URL projet :**  
-[Accéder à la version en ligne](https://lovable.dev/projects/93c40cab-37a9-43d9-9f00-1e810a5ea4ec)
+[Accéder à la version en ligne](https://prototype-farmshop-management.netlify.app/)
 
 🎯 **Fonctionnalités principales :**
 - Gestion des articles (produits agricoles et d’élevage)
@@ -19,12 +19,7 @@ Bienvenue dans **FarmShop Manager**, une plateforme intelligente pour la gestion
 
 ## 🛠️ Comment modifier ce projet ?
 
-### 1. 💜 Utiliser Lovable
-- Visite le projet Lovable
-- Clique, écris des prompts, et observe les changements !
-- Toute modification est automatiquement versionnée dans le dépôt.
-
-### 2. 🧑‍💻 Utiliser ton IDE local
+### 1. 🧑‍💻 Utiliser ton IDE local
 Si tu préfères coder localement :
 
 #### Étapes :
