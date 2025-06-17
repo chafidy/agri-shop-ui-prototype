@@ -32,7 +32,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
     <div className="min-h-screen flex w-full">
       <AppSidebar />
       <main className="flex-1">
-        <div className="p-4 border-b border-gray-200 bg-white shadow-sm flex items-center justify-between">
+        <div className="h-[73px] p-4 border-b border-gray-200 bg-white shadow-sm flex items-center justify-between">
           <SidebarTrigger className="hover-scale" />
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="icon" className="relative">

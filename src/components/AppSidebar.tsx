@@ -97,7 +97,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-r border-farm-cream/50">
-      <SidebarHeader className="p-6 border-b border-farm-cream/50 bg-farm-cream">
+      <SidebarHeader className="h-[73px] p-6 border-b border-farm-cream/50 bg-farm-cream flex items-center">
         <div className="flex items-center space-x-3">
           <div className="bg-farm-green rounded-lg w-10 h-10 flex items-center justify-center">
             <Store className="w-6 h-6 text-white" />
