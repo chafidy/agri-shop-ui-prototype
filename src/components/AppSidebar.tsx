@@ -1,3 +1,4 @@
+
 import { 
   Home, 
   ShoppingCart, 
@@ -13,7 +14,8 @@ import {
   Truck,
   Calculator,
   BarChart3,
-  Store
+  Store,
+  ClipboardList
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -38,6 +40,11 @@ const menuItems = [
     title: "Ventes",
     url: "/sales",
     icon: ShoppingCart,
+  },
+  {
+    title: "Commandes",
+    url: "/orders",
+    icon: ClipboardList,
   },
   {
     title: "Achats & Approvisionnement",

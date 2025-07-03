@@ -16,6 +16,7 @@ import Products from "./pages/Products";
 import Categories from "./pages/Categories";
 import Clients from "./pages/Clients";
 import Sales from "./pages/Sales";
+import Orders from "./pages/Orders";
 import Purchases from "./pages/Purchases";
 import Inventory from "./pages/Inventory";
 import Suppliers from "./pages/Suppliers";
@@ -81,6 +82,11 @@ const App = () => (
           <Route path="/sales" element={
             <AppLayout>
               <Sales />
+            </AppLayout>
+          } />
+          <Route path="/orders" element={
+            <AppLayout>
+              <Orders />
             </AppLayout>
           } />
           <Route path="/purchases" element={
