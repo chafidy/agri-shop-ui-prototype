@@ -10,9 +10,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { ClipboardList, Plus, Eye, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import OrderDetailsDialog from '@/components/OrderDetailsDialog';
 
 const Orders = () => {
   const [isNewOrderOpen, setIsNewOrderOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false);
   const [orderItems, setOrderItems] = useState([
     { id: 1, produit: '', quantite: 1, prix: 0, total: 0, stockDisponible: 0 }
   ]);
@@ -419,6 +422,10 @@ const Orders = () => {
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={() => {
+                        setSelectedOrder(order);
+                        setIsOrderDetailsOpen(true);
+                      }}
                       className="text-farm-green border-farm-green hover:bg-farm-green hover:text-white"
                     >
                       <Eye className="w-3 h-3 mr-1" />
@@ -431,6 +438,15 @@ const Orders = () => {
           </Table>
         </CardContent>
       </Card>
+
+      <OrderDetailsDialog
+        order={selectedOrder}
+        isOpen={isOrderDetailsOpen}
+        onClose={() => {
+          setIsOrderDetailsOpen(false);
+          setSelectedOrder(null);
+        }}
+      />
     </div>
   );
 };

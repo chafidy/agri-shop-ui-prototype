@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ShoppingCart, Plus, CreditCard } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import ReceiptDialog from '@/components/ReceiptDialog';
 
 const Sales = () => {
   const [saleItems, setSaleItems] = useState([
@@ -14,6 +15,7 @@ const Sales = () => {
   ]);
   const [client, setClient] = useState('');
   const [modePaiement, setModePaiement] = useState('');
+  const [isReceiptOpen, setIsReceiptOpen] = useState(false);
 
   const products = [
     { id: 1, name: "Aliment pour vaches", prix: 15000 },
@@ -236,7 +238,11 @@ const Sales = () => {
                 >
                   Enregistrer la vente
                 </Button>
-                <Button variant="outline" className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsReceiptOpen(true)}
+                  className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white"
+                >
                   Générer le reçu
                 </Button>
               </div>
@@ -271,6 +277,15 @@ const Sales = () => {
           </Card>
         </div>
       </div>
+
+      <ReceiptDialog
+        saleItems={saleItems}
+        client={client}
+        modePaiement={modePaiement}
+        total={totalGeneral}
+        isOpen={isReceiptOpen}
+        onClose={() => setIsReceiptOpen(false)}
+      />
     </div>
   );
 };

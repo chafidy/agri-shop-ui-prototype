@@ -9,6 +9,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { UserNav } from "@/components/UserNav";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import NotificationsPopover from "@/components/NotificationsPopover";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
@@ -25,6 +26,8 @@ import UsersPage from "./pages/Users";
 import Settings from "./pages/Settings";
 import Accounting from "./pages/Accounting";
 import NotFound from "./pages/NotFound";
+import Notifications from "./pages/Notifications";
+import Invoices from "./pages/Invoices";
 
 const queryClient = new QueryClient();
 
@@ -36,10 +39,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
         <div className="h-[73px] p-4 border-b border-gray-200 bg-white shadow-sm flex items-center justify-between">
           <SidebarTrigger className="hover-scale" />
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-            </Button>
+            <NotificationsPopover />
             <UserNav />
           </div>
         </div>
@@ -122,6 +122,16 @@ const App = () => (
           <Route path="/settings" element={
             <AppLayout>
               <Settings />
+            </AppLayout>
+          } />
+          <Route path="/notifications" element={
+            <AppLayout>
+              <Notifications />
+            </AppLayout>
+          } />
+          <Route path="/invoices" element={
+            <AppLayout>
+              <Invoices />
             </AppLayout>
           } />
           <Route path="*" element={<NotFound />} />

@@ -6,10 +6,15 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Package, AlertTriangle, TrendingDown, TrendingUp, Archive } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import StockAdjustmentDialog from '@/components/stock/StockAdjustmentDialog';
+import ImportDialog from '@/components/common/ImportDialog';
+import { exportInventoryCSV } from '@/utils/csvExport';
 
 const Inventory = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [isAdjustmentOpen, setIsAdjustmentOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   const inventoryData = [
     {
@@ -286,19 +291,42 @@ const Inventory = () => {
               <CardTitle className="text-farm-green-dark">Actions rapides</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button variant="outline" className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsAdjustmentOpen(true)}
+                className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white"
+              >
                 Ajustement stock
               </Button>
-              <Button variant="outline" className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsImportOpen(true)}
+                className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white"
+              >
                 Importer données
               </Button>
-              <Button variant="outline" className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white">
+              <Button 
+                variant="outline" 
+                onClick={() => exportInventoryCSV(inventoryData)}
+                className="w-full border-farm-green text-farm-green hover:bg-farm-green hover:text-white"
+              >
                 Export inventaire
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      <StockAdjustmentDialog
+        isOpen={isAdjustmentOpen}
+        onClose={() => setIsAdjustmentOpen(false)}
+      />
+
+      <ImportDialog
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        title="Importer des données de stock"
+      />
     </div>
   );
 };
