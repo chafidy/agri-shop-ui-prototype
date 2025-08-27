@@ -3,8 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, TrendingUp, TrendingDown, FileText, DollarSign, PieChart, BarChart3, Download } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from '@/hooks/use-toast';
+import { exportToCSV } from '@/utils/csvExport';
 
 const Accounting = () => {
+  const navigate = useNavigate();
   const resumeFinancier = {
     chiffreAffaires: "2,450,000",
     beneficeNet: "485,000",
@@ -40,6 +44,32 @@ const Accounting = () => {
     }
   };
 
+  const handleExportComptable = () => {
+    const dataToExport = [
+      ['Type', 'Montant', 'Date', 'Description'],
+      ['Chiffre d\'affaires', resumeFinancier.chiffreAffaires, new Date().toLocaleDateString(), 'CA mensuel'],
+      ['Bénéfice net', resumeFinancier.beneficeNet, new Date().toLocaleDateString(), 'Bénéfice mensuel'],
+      ['Charges totales', resumeFinancier.chargesTotal, new Date().toLocaleDateString(), 'Charges mensuelles'],
+      ['Trésorerie', resumeFinancier.tresorerie, new Date().toLocaleDateString(), 'Disponible'],
+      ['Créances', resumeFinancier.creances, new Date().toLocaleDateString(), 'À encaisser'],
+      ['Dettes', resumeFinancier.dettes, new Date().toLocaleDateString(), 'À payer']
+    ];
+    
+    exportToCSV(dataToExport, 'export-comptable');
+    toast({
+      title: "Export réussi",
+      description: "Les données comptables ont été exportées en CSV",
+    });
+  };
+
+  const handleNewReport = () => {
+    navigate('/reports', { state: { periode: 'mois' } });
+  };
+
+  const handleViewAllInvoices = () => {
+    navigate('/invoices');
+  };
+
   return (
     <div className="p-6 space-y-6 bg-farm-cream/30 min-h-screen">
       <div className="flex items-center justify-between">
@@ -48,11 +78,18 @@ const Accounting = () => {
           <p className="text-gray-600 mt-1">Suivi financier de votre boutique d'élevage</p>
         </div>
         <div className="flex space-x-3">
-          <Button variant="outline" className="border-farm-green text-farm-green hover:bg-farm-green hover:text-white">
+          <Button 
+            variant="outline" 
+            className="border-farm-green text-farm-green hover:bg-farm-green hover:text-white"
+            onClick={handleExportComptable}
+          >
             <Download className="w-4 h-4 mr-2" />
             Export comptable
           </Button>
-          <Button className="bg-farm-green hover:bg-farm-green-dark">
+          <Button 
+            className="bg-farm-green hover:bg-farm-green-dark"
+            onClick={handleNewReport}
+          >
             <FileText className="w-4 h-4 mr-2" />
             Nouveau rapport
           </Button>
@@ -204,7 +241,11 @@ const Accounting = () => {
                 </div>
               ))}
             </div>
-            <Button variant="outline" className="w-full mt-4 border-farm-green text-farm-green hover:bg-farm-green hover:text-white">
+            <Button 
+              variant="outline" 
+              className="w-full mt-4 border-farm-green text-farm-green hover:bg-farm-green hover:text-white"
+              onClick={handleViewAllInvoices}
+            >
               Voir toutes les factures
             </Button>
           </CardContent>

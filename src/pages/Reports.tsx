@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, TrendingUp, DollarSign, Package, FileText, Download, Filter } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { toast } from '@/hooks/use-toast';
+import { exportToCSV } from '@/utils/csvExport';
 
 const Reports = () => {
   const [periode, setPeriode] = useState('mois');
@@ -51,8 +53,50 @@ const Reports = () => {
   ];
 
   const exportReport = (type: string) => {
-    // Simulation de l'export
-    console.log(`Export ${type} en cours...`);
+    let dataToExport: any[] = [];
+    let filename = '';
+
+    switch(type) {
+      case 'ventes':
+        dataToExport = [
+          ['Date', 'Ventes (Ar)'],
+          ...ventesParJour.map(item => [item.date, item.ventes])
+        ];
+        filename = 'rapport-ventes';
+        break;
+      case 'stock':
+        dataToExport = [
+          ['Produit', 'Quantité', 'Date Expiration', 'Jours Restants'],
+          ...produitsExpiration.map(item => [item.produit, item.quantite, item.dateExpiration, item.joursRestants])
+        ];
+        filename = 'etat-stock';
+        break;
+      case 'marges':
+        dataToExport = [
+          ['Produit', 'Coût Achat (Ar)', 'Prix Vente (Ar)', 'Marge (%)'],
+          ...marges.map(item => [item.produit, item.coutAchat, item.prixVente, item.marge])
+        ];
+        filename = 'analyse-marges';
+        break;
+      case 'complet':
+      default:
+        dataToExport = [
+          ['Période', 'CA Total (Ar)', 'Produits Vendus', 'Marge Moyenne (%)'],
+          [periode, caTotal, produitsVendus, margesMoyenne.toFixed(1)]
+        ];
+        filename = 'rapport-complet';
+        break;
+    }
+
+    exportToCSV(dataToExport, filename);
+    toast({
+      title: "Export réussi",
+      description: `Le rapport ${type} a été exporté en CSV`,
+    });
+  };
+
+  const handleMainExport = () => {
+    exportReport('complet');
   };
 
   const caTotal = ventesParJour.reduce((sum, item) => sum + item.ventes, 0);
@@ -78,7 +122,10 @@ const Reports = () => {
               <SelectItem value="annee">Année</SelectItem>
             </SelectContent>
           </Select>
-          <Button className="bg-farm-green hover:bg-farm-green-dark hover-scale">
+          <Button 
+            className="bg-farm-green hover:bg-farm-green-dark hover-scale"
+            onClick={handleMainExport}
+          >
             <Download className="w-4 h-4 mr-2" />
             Exporter
           </Button>

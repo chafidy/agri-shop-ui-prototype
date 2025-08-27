@@ -9,12 +9,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Search, UserPlus, Users, Shield, Activity, Eye, Edit, Trash2, Store, Calculator, Truck } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import UserEditDialog from '@/components/users/UserEditDialog';
+import UserPermissionsDialog from '@/components/users/UserPermissionsDialog';
 
 const UsersPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRole, setSelectedRole] = useState('');
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-
   const utilisateurs = [
     {
       id: 1,
@@ -78,6 +77,14 @@ const UsersPage = () => {
     }
   ];
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isPermissionsDialogOpen, setIsPermissionsDialogOpen] = useState(false);
+  const [users, setUsers] = useState(utilisateurs);
+
   const historiqueActions = [
     { utilisateur: "Rakoto Andry", action: "Validation commande fournisseur 'Aliments Bovins'", date: "2024-06-13 09:15", type: "validation" },
     { utilisateur: "Rasoa Marie", action: "Vente 150,000 Ar - Provende porc 25kg", date: "2024-06-13 08:30", type: "vente" },
@@ -96,7 +103,7 @@ const UsersPage = () => {
     "Comptable/Financier"
   ];
 
-  const filteredUsers = utilisateurs.filter(user => {
+  const filteredUsers = users.filter(user => {
     const matchesSearch = user.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = selectedRole === '' || selectedRole === 'Tous' || user.role === selectedRole;
@@ -140,9 +147,40 @@ const UsersPage = () => {
     setIsAddDialogOpen(false);
   };
 
-  const totalUtilisateurs = utilisateurs.length;
-  const utilisateursActifs = utilisateurs.filter(u => u.statut === 'actif').length;
-  const totalConnexions = utilisateurs.reduce((sum, u) => sum + u.nombreConnexions, 0);
+  const handleEditUser = (user: any) => {
+    setSelectedUser(user);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveUser = (updatedUser: any) => {
+    setUsers(users.map(u => u.id === updatedUser.id ? updatedUser : u));
+    setIsEditDialogOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleEditPermissions = (user: any) => {
+    setSelectedUser(user);
+    setIsPermissionsDialogOpen(true);
+  };
+
+  const handleSavePermissions = (userId: number, permissions: string[]) => {
+    setUsers(users.map(u => u.id === userId ? { ...u, permissions } : u));
+    setIsPermissionsDialogOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleRemoveUser = (user: any) => {
+    setUsers(users.filter(u => u.id !== user.id));
+    toast({
+      title: "Utilisateur retiré",
+      description: `${user.nom} a été retiré de l'équipe`,
+      variant: "destructive"
+    });
+  };
+
+  const totalUtilisateurs = users.length;
+  const utilisateursActifs = users.filter(u => u.statut === 'actif').length;
+  const totalConnexions = users.reduce((sum, u) => sum + u.nombreConnexions, 0);
 
   return (
     <div className="p-6 space-y-6 bg-farm-cream/30 min-h-screen">
@@ -310,18 +348,49 @@ const UsersPage = () => {
                     </div>
                     
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm" className="text-farm-green border-farm-green hover:bg-farm-green hover:text-white">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-farm-green border-farm-green hover:bg-farm-green hover:text-white"
+                        onClick={() => handleEditUser(user)}
+                      >
                         <Edit className="w-3 h-3 mr-1" />
                         Modifier
                       </Button>
-                      <Button variant="outline" size="sm" className="text-farm-green border-farm-green hover:bg-farm-green hover:text-white">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-farm-green border-farm-green hover:bg-farm-green hover:text-white"
+                        onClick={() => handleEditPermissions(user)}
+                      >
                         <Shield className="w-3 h-3 mr-1" />
                         Permissions
                       </Button>
-                      <Button variant="outline" size="sm" className="text-red-600 border-red-300 hover:bg-red-50">
-                        <Trash2 className="w-3 h-3 mr-1" />
-                        Retirer
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="text-red-600 border-red-300 hover:bg-red-50">
+                            <Trash2 className="w-3 h-3 mr-1" />
+                            Retirer
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Retirer {user.nom} de l'équipe ?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Cette action est irréversible. L'utilisateur perdra l'accès à l'application et toutes ses données seront supprimées.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={() => handleRemoveUser(user)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Retirer définitivement
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 ))}
@@ -383,6 +452,27 @@ const UsersPage = () => {
           </Card>
         </div>
       </div>
+
+      {/* Dialogs */}
+      <UserEditDialog
+        user={selectedUser}
+        isOpen={isEditDialogOpen}
+        onClose={() => {
+          setIsEditDialogOpen(false);
+          setSelectedUser(null);
+        }}
+        onSave={handleSaveUser}
+      />
+
+      <UserPermissionsDialog
+        user={selectedUser}
+        isOpen={isPermissionsDialogOpen}
+        onClose={() => {
+          setIsPermissionsDialogOpen(false);
+          setSelectedUser(null);
+        }}
+        onSave={handleSavePermissions}
+      />
     </div>
   );
 };
