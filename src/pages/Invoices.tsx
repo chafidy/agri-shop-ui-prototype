@@ -12,7 +12,7 @@ import { toast } from '@/hooks/use-toast';
 
 const Invoices = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [isNewInvoiceOpen, setIsNewInvoiceOpen] = useState(false);
 
   const [invoices, setInvoices] = useState([
@@ -97,7 +97,7 @@ const Invoices = () => {
     const matchesSearch = 
       invoice.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       invoice.client.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === '' || invoice.statut === statusFilter;
+    const matchesStatus = statusFilter === 'all' || invoice.statut === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -230,7 +230,7 @@ const Invoices = () => {
                 <SelectValue placeholder="Filtrer par statut" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Tous</SelectItem>
+                <SelectItem value="all">Tous</SelectItem>
                 <SelectItem value="en_attente">En attente</SelectItem>
                 <SelectItem value="payee">Payée</SelectItem>
                 <SelectItem value="en_retard">En retard</SelectItem>
